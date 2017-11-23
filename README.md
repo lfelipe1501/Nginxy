@@ -9,7 +9,7 @@ Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsys
 
 - Include the content of **nginxy.conf** in your location directive (location / {.....}) in your nginx config (usually nginx.conf).
 
-- Move the Nginxy/ folder a directory before the folder that will serve the files and rename it to **.nginxy/**.
+- Move the *Nginxy-Theme/* folder a directory before the folder that will serve the files and rename it to **.nginxy/**.
 
   ![ScreenShot](/images/Capture.PNG)
 
