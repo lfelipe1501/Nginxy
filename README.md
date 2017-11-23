@@ -1,4 +1,4 @@
-# Nginxy Directory Listing Theme
+# Nginxy - Directory Listing Theme
 A responsive theme for [Nginx Fancyindex module](https://github.com/aperezdc/ngx-fancyindex). Minimal, modern and simple theme for your **nginx** directory listing with same appearance of Apaxy for apache.
 Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsystems.com.co/fileserver/).
 
@@ -9,7 +9,7 @@ Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsys
 
 - Include the content of **nginxy.conf** in your location directive (location / {.....}) in your nginx config (usually nginx.conf).
 
-- Move the *Nginxy-Theme/* folder a directory before the folder that will serve the files and rename it to **.nginxy/**.
+- Move the *Nginxy-Theme/* folder a directory before the folder that will serve the files and rename it to **.nginxy/** As shown in the following screenshot:
 
   ![ScreenShot](/images/Capture.PNG)
 
