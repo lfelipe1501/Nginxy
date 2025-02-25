@@ -28,12 +28,12 @@
 .dark-theme {
     --primary-color: #6d8eff;
     --secondary-color: #adb5bd;
-    --background-color: #121212;
+    --background-color: #202020;
     --text-color: #e0e0e0;
     --border-color: #2d2d2d;
     --hover-color: #1e1e1e;
     --header-color: #e0e0e0;
-    --footer-color: #1a1a1a;
+    --footer-color: #202020;
     --table-header-bg: #2d2d2d;
     --table-header-color: #e0e0e0;
     --table-shadow: rgba(0, 0, 0, 0.2);
@@ -111,6 +111,23 @@ h1 {
     color: var(--header-color);
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h1::before {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffc107" d="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z" /></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.dark-theme h1::before {
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23ffc107" d="M10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6H12L10,4Z" /></svg>');
 }
 
 /*------------------------------------*\
@@ -192,7 +209,6 @@ tr.parent a {
     Footer
 \*------------------------------------*/
 #footer {
-    margin-top: 2rem;
     padding: 1rem 0;
     text-align: center;
     font-size: 0.9rem;
@@ -202,18 +218,18 @@ tr.parent a {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.text-center {
-    text-align: center;
-    margin-bottom: 1rem;
+#footer .text-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer-logo {
     margin-top: 0.5rem;
     transition: filter 0.3s ease;
-}
-
-.dark-theme .footer-logo {
-    filter: brightness(1.75);
+    display: block;
+    margin: 10px auto;
 }
 
 /*------------------------------------*\

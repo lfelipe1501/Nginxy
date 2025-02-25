@@ -88,7 +88,7 @@ const iconMap = {
     'doc': { icon: 'file-word', color: '#2196f3' },
     'docx': { icon: 'file-word', color: '#2196f3' },
     'txt': { icon: 'file-document', color: '#607d8b' },
-    'pdf': { icon: 'file-pdf', color: '#f44336' },
+    'pdf': { icon: 'file-pdf-box', color: '#f44336' },
     'csv': { icon: 'file-delimited', color: '#4caf50' },
     'log': { icon: 'file-document-outline', color: '#607d8b' },
     'json': { icon: 'code-json', color: '#ffc107' },

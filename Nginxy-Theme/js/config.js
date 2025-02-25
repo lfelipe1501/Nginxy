@@ -24,7 +24,7 @@ const iconMap = {
     'doc': { icon: 'file-word', color: '#2196f3' },
     'docx': { icon: 'file-word', color: '#2196f3' },
     'txt': { icon: 'file-document', color: '#607d8b' },
-    'pdf': { icon: 'file-pdf', color: '#f44336' },
+    'pdf': { icon: 'file-pdf-box', color: '#f44336' },
     'ppt': { icon: 'file-powerpoint', color: '#ff5722' },
     'pptx': { icon: 'file-powerpoint', color: '#ff5722' },
     'xls': { icon: 'file-excel', color: '#4caf50' },
