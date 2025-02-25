@@ -1,99 +1,265 @@
-//
 /*------------------------------------*\
     Nginxy
     by @lfelipe1501
+    Modernized version
 
     Theme name: Nginxy
     Theme author: @lfelipe1501
 \*------------------------------------*/
 // Configure .nginxy here:
-var websiteName = 'File Server';
-var websiteURL = 'http://www.electrojaponesa.com';
+const websiteName = 'File Server';
+const websiteURL = 'https://www.lfsystems.com.co';
+
+// Material Design Icons CDN
+const iconsCDN = 'https://cdn.jsdelivr.net/npm/@mdi/svg@7.2.96/svg/';
+
+// Mapping file extensions to Material Design Icons with colors
+const iconMap = {
+    // Folders and navigation
+    'folder': { icon: 'folder', color: '#ffc107' },
+    'home': { icon: 'home', color: '#4caf50' },
+    'error': { icon: 'file-alert', color: '#f44336' },
+    
+    // Documents
+    'doc': { icon: 'file-word', color: '#2196f3' },
+    'docx': { icon: 'file-word', color: '#2196f3' },
+    'txt': { icon: 'file-document', color: '#607d8b' },
+    'pdf': { icon: 'file-pdf', color: '#f44336' },
+    'ppt': { icon: 'file-powerpoint', color: '#ff5722' },
+    'pptx': { icon: 'file-powerpoint', color: '#ff5722' },
+    'xls': { icon: 'file-excel', color: '#4caf50' },
+    'xlsx': { icon: 'file-excel', color: '#4caf50' },
+    'csv': { icon: 'file-delimited', color: '#4caf50' },
+    'log': { icon: 'file-document-outline', color: '#607d8b' },
+    'json': { icon: 'code-json', color: '#ffc107' },
+    
+    // Images
+    'jpg': { icon: 'file-image', color: '#9c27b0' },
+    'jpeg': { icon: 'file-image', color: '#9c27b0' },
+    'png': { icon: 'file-image', color: '#9c27b0' },
+    'gif': { icon: 'file-image', color: '#9c27b0' },
+    'bmp': { icon: 'file-image', color: '#9c27b0' },
+    'tiff': { icon: 'file-image', color: '#9c27b0' },
+    'ico': { icon: 'file-image', color: '#9c27b0' },
+    'svg': { icon: 'file-image', color: '#9c27b0' },
+    'psd': { icon: 'file-image', color: '#673ab7' },
+    'raw': { icon: 'file-image', color: '#673ab7' },
+    
+    // Audio/Video
+    'mp3': { icon: 'file-music', color: '#e91e63' },
+    'wav': { icon: 'file-music', color: '#e91e63' },
+    'ogg': { icon: 'file-music', color: '#e91e63' },
+    'wma': { icon: 'file-music', color: '#e91e63' },
+    'mp4': { icon: 'file-video', color: '#ff9800' },
+    'avi': { icon: 'file-video', color: '#ff9800' },
+    'wmv': { icon: 'file-video', color: '#ff9800' },
+    
+    // Archives
+    'zip': { icon: 'folder-zip', color: '#795548' },
+    'rar': { icon: 'folder-zip', color: '#795548' },
+    '7z': { icon: 'folder-zip', color: '#795548' },
+    'tar': { icon: 'folder-zip', color: '#795548' },
+    'gz': { icon: 'folder-zip', color: '#795548' },
+    'gzip': { icon: 'folder-zip', color: '#795548' },
+    'deb': { icon: 'folder-zip', color: '#795548' },
+    'iso': { icon: 'disc', color: '#607d8b' },
+    
+    // Code
+    'html': { icon: 'language-html5', color: '#e44d26' },
+    'css': { icon: 'language-css3', color: '#1572b6' },
+    'js': { icon: 'language-javascript', color: '#f7df1e' },
+    'php': { icon: 'language-php', color: '#777bb3' },
+    'py': { icon: 'language-python', color: '#3776ab' },
+    'java': { icon: 'language-java', color: '#007396' },
+    'jar': { icon: 'language-java', color: '#007396' },
+    'c': { icon: 'language-c', color: '#a8b9cc' },
+    'c++': { icon: 'language-cpp', color: '#00599c' },
+    'sql': { icon: 'database', color: '#4479a1' },
+    'sh': { icon: 'console', color: '#4eaa25' },
+    'bat': { icon: 'console', color: '#4eaa25' },
+    'cmd': { icon: 'console', color: '#4eaa25' },
+    
+    // Executables and others
+    'exe': { icon: 'microsoft-windows', color: '#0078d7' },
+    'bin': { icon: 'file-binary', color: '#607d8b' },
+    'swf': { icon: 'flash', color: '#cf302a' },
+    'torrent': { icon: 'download', color: '#00bcd4' },
+    'msg': { icon: 'email', color: '#00bcd4' }
+};
+
 // End of normal settings.
-//
-//
 
-$(document).ready(function(){
+document.addEventListener('DOMContentLoaded', function() {
+    // Check for dark mode preference
+    setupThemeDetection();
+    
+    // Working on nginx HTML and applying settings.
+    const h1Element = document.querySelector("h1");
+    const text = h1Element.textContent;
+    const array = text.split('/');
+    const last = array[array.length-2];
+    const firstLink = document.getElementsByTagName('a')[0];
+    const dirStructure = firstLink ? firstLink.href : '';
+    const dir = text.substring(10);
+    let currentDir = last ? last.charAt(0).toUpperCase() + last.slice(1) : '';
 
-// Working on nginx HTML and applying settings.
-var text = $("h1").text();
-var array = text.split('/');
-var last = array[array.length-2];
-var dirStructure = $("a").text();
-var dirStructure = document.getElementsByTagName('a')[0].href;
-var dir = text.substring(10);
-var currentDir = last.charAt(0).toUpperCase() + last.slice(1);
-var dirTrun;
+    // Truncate long folder names.
+    if (currentDir.length > 19) {
+        currentDir = currentDir.substring(0, 18) + '...';
+    }
 
-// Truncate long folder names.
-if (currentDir.length > 19){
-	var currentDir = currentDir.substring(0, 18) + '...';
+    // Updating page title.
+    document.title = currentDir + ' – ' + websiteName;
+
+    // Updating page footer.
+    const footerURL = document.getElementById("footerURL");
+    if (footerURL) {
+        footerURL.textContent = websiteName;
+        footerURL.setAttribute('href', websiteURL);
+    }
+
+    // Update header with current directory name
+    if (h1Element) {
+        h1Element.textContent = currentDir;
+    }
+
+    // Establish supported formats.
+    const formats = Object.keys(iconMap);
+
+    // Scan all files in the directory, check the extensions and show the right MIME-type image.
+    const links = document.querySelectorAll('td a');
+    
+    links.forEach(function(link) {
+        let found = 0;
+        const href = link.getAttribute('href');
+        
+        // Add an icon for the go-back link.
+        if (link.textContent.indexOf("Parent directory") >= 0) {
+            found = 1;
+            const oldText = link.textContent;
+            insertSvgIcon(link, 'home', oldText);
+            return;
+        }
+        
+        // Check for folders as they don't have extensions.
+        if (href && href.substr(href.length - 1) == '/') {
+            found = 1;
+            const oldText = link.textContent;
+            insertSvgIcon(link, 'folder', oldText.substring(0, oldText.length - 1));
+            return;
+        }
+        
+        // Check file extensions
+        if (href) {
+            const arraySplit = href.split(".");
+            const fileExt = arraySplit.length > 1 ? arraySplit[arraySplit.length - 1].toLowerCase() : '';
+            
+            if (fileExt && iconMap[fileExt]) {
+                found = 1;
+                const oldText = link.textContent;
+                insertSvgIcon(link, fileExt, oldText);
+                return;
+            }
+        }
+        
+        // File format not supported, load a generic icon.
+        if (found == 0) {
+            const oldText = link.textContent;
+            insertSvgIcon(link, 'error', oldText);
+        }
+    });
+    
+    // Add responsive behavior for mobile
+    addResponsiveFeatures();
+});
+
+// Function to insert SVG icon
+function insertSvgIcon(element, iconKey, text) {
+    const iconInfo = iconMap[iconKey] || iconMap['error'];
+    const iconUrl = `${iconsCDN}${iconInfo.icon}.svg`;
+    
+    // Fetch the SVG content
+    fetch(iconUrl)
+        .then(response => response.text())
+        .then(svgText => {
+            // Create a container for the icon and text
+            const container = document.createElement('span');
+            container.className = 'icon-text-container';
+            
+            // Create a span for the SVG icon
+            const iconSpan = document.createElement('span');
+            iconSpan.className = 'icon-container';
+            iconSpan.innerHTML = svgText;
+            
+            // Apply color to the SVG
+            const svgElement = iconSpan.querySelector('svg');
+            if (svgElement) {
+                svgElement.setAttribute('fill', iconInfo.color);
+                svgElement.classList.add('colored-icon');
+            }
+            
+            // Add the icon and text to the container
+            container.appendChild(iconSpan);
+            container.appendChild(document.createTextNode(text));
+            
+            // Clear the link content and add the container
+            element.innerHTML = '';
+            element.appendChild(container);
+        })
+        .catch(error => {
+            console.error('Error loading SVG:', error);
+            // Fallback to text if SVG fails to load
+            element.textContent = text;
+        });
 }
 
-// Updating page title.
-document.title = currentDir + ' – ' + websiteName;
-
-// Updating page footer.
-$("#footerURL").text(websiteName);
-$("#footerURL").attr('href', websiteURL);
-
-// Add back button.
-$("h1").html(currentDir);
-
-if (dir.length > 60) {
-	dirTrun = dir.replace(/(.{60})/g, "$1\n")
-} else {
-	dirTrun = dir.substring(0, dir.length - 1);
+// Function to add responsive features
+function addResponsiveFeatures() {
+    // Add a class to the body based on screen size
+    const body = document.body;
+    
+    function updateBodyClass() {
+        if (window.innerWidth <= 768) {
+            body.classList.add('mobile-view');
+            body.classList.remove('desktop-view');
+        } else {
+            body.classList.add('desktop-view');
+            body.classList.remove('mobile-view');
+        }
+    }
+    
+    // Initial call
+    updateBodyClass();
+    
+    // Update on resize
+    window.addEventListener('resize', updateBodyClass);
 }
 
-// Establish supported formats.
-var list = new Array();
-var formats = ["bin", "jpg", "gif", "bmp", "png", "html", "css", "zip", "iso", "tiff", "ico", "psd", "pdf", "exe", "rar", "deb", "swf", "7z", "doc", "docx", "xls", "xlsx", "pptx", "ppt", "txt", "php", "js", "c", "c++", "torrent", "sql", "wmv", "avi", "mp4", "mp3", "wma", "ogg", "msg", "wav", "py", "java", "gzip", "jpeg", "raw", "cmd", "bat", "sh", "svg"];
+// Function to detect and apply theme based on user preference
+function setupThemeDetection() {
+    // Check if the browser supports dark mode detection
+    if (window.matchMedia) {
+        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        // Apply theme based on current preference
+        applyTheme(darkModeMediaQuery.matches);
+        
+        // Listen for changes in the color scheme
+        darkModeMediaQuery.addEventListener('change', (e) => {
+            applyTheme(e.matches);
+        });
+    }
+}
 
-// Scan all files in the directory, check the extensions and show the right MIME-type image.
-$('td a').each(function(){
-	var found = 0;
-	var arraySplit = $(this).attr('href').split(".");
-	var fileExt = arraySplit[arraySplit.length - 1];
-
-	for (var i = 0; i < formats.length; i++) {
-		if (fileExt.toLowerCase() == formats[i].toLowerCase()) {
-			var found = 1;
-			var oldText = $(this).text();
-			$(this).html('<img class="icons" src="/.nginxy/images/icons/' + formats[i] + '.png" style="margin:0px 4px -4px 0px"></img></a>' + oldText);
-			return;
-		}
-	}
-
-	// Add an icon for the go-back link.
-	if ($(this).text().indexOf("Parent directory") >= 0) {
-		var found = 1;
-		var oldText = $(this).text();
-		$(this).html('<img class="icons" src="/.nginxy/images/icons/home.png" style="margin:0px 4px -4px 0px">' + oldText);
-		return;
-	}
-
-
-	// Check for folders as they don't have extensions.
-	if ($(this).attr('href').substr($(this).attr('href').length - 1) == '/') {
-		var found = 1;
-		var oldText = $(this).text();
-		$(this).html('<img class="icons" src="/.nginxy/images/icons/folder.png" style="margin:0px 4px -4px 0px">' + oldText.substring(0, oldText.length - 1));
-
-		// Fix for annoying jQuery behaviour where inserted spaces are treated as new elements -- which breaks my search.
-		var string = ' ' + $($(this)[0].nextSibling).text();
-
-		// Copy the original meta-data string, append a space char and save it over the old string.
-		$($(this)[0].nextSibling).remove();
-		$(this).after(string);
-		return;
-	}
-
-	// File format not supported by Better Listings, so let's load a generic icon.
-	if (found == 0){
-		var oldText = $(this).text();
-		$(this).html('<img class="icons" src="/.nginxy/images/icons/error.png" style="margin:0px 4px -4px 0px">' + oldText);
-		return;
-	}
-});
-});
+// Function to apply dark or light theme
+function applyTheme(isDarkMode) {
+    const root = document.documentElement;
+    
+    if (isDarkMode) {
+        root.classList.add('dark-theme');
+        root.classList.remove('light-theme');
+    } else {
+        root.classList.add('light-theme');
+        root.classList.remove('dark-theme');
+    }
+}

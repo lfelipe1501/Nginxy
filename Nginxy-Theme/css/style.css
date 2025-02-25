@@ -1,170 +1,277 @@
 /*------------------------------------*\
-    Nginxy
+    Nginxy - Modernized Version
     by @lfelipe1501
 
     Theme name: Nginxy
     Theme author: @lfelipe1501
 \*------------------------------------*/
-@import url('//fonts.googleapis.com/css?family=Open+Sans');
-/* Have to use @import for the font, as you can only specify a single stylesheet */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
+
+/* Light Theme Variables (default) */
+:root, .light-theme {
+    --primary-color: #4a6cf7;
+    --secondary-color: #6c757d;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #e9ecef;
+    --hover-color: #f8f9fa;
+    --header-color: #343a40;
+    --footer-color: #f8f9fa;
+    --icon-size: 24px;
+    --table-header-bg: #4a6cf7;
+    --table-header-color: #ffffff;
+    --table-shadow: rgba(0, 0, 0, 0.05);
+    --icon-opacity: 1;
+}
+
+/* Dark Theme Variables */
+.dark-theme {
+    --primary-color: #6d8eff;
+    --secondary-color: #adb5bd;
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --border-color: #2d2d2d;
+    --hover-color: #1e1e1e;
+    --header-color: #e0e0e0;
+    --footer-color: #1a1a1a;
+    --table-header-bg: #2d2d2d;
+    --table-header-color: #e0e0e0;
+    --table-shadow: rgba(0, 0, 0, 0.2);
+    --icon-opacity: 0.9;
+}
+
 * {
-    margin:0;
-    padding:0;
-    -webkit-box-sizing:border-box;
-       -moz-box-sizing:border-box;
-           box-sizing: border-box; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 html {
-    min-height:100%;
-    font-weight:300;
-    font-size:1em;
-    font-family:system, -apple-system, ".SFNSDisplay-Regular", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    line-height:2em;
+    font-size: 16px;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    line-height: 1.5;
 }
+
 body {
-    max-width:900px;
+    max-width: 1200px;
     margin: 0 auto;
-    -webkit-backface-visibility:hidden;
-    background: #ffffff;
-    color: #808080;
-	font-family: 'Open Sans', 'Helvetica Neue', Arial, sans-serif;
+    padding: 0 1rem;
+    background: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
-    color:#656565;
-    text-decoration:none;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
-.icons {
-	/*margin: 3px 5px 3px 5px;*/
-	height: 23px;
-	width: 24px;
+a:hover {
+    color: var(--primary-color);
+    opacity: 0.8;
 }
-/*------------------------------------*\
-    Wrapper
-\*------------------------------------*/
-.wrapper {
-    margin:0 auto;
-    padding-top:20px;
-    max-width:800px;
+
+/* Icon styles */
+.icon-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
 }
+
+.icon-container svg {
+    width: var(--icon-size);
+    height: var(--icon-size);
+    opacity: var(--icon-opacity);
+    transition: opacity 0.3s ease;
+}
+
+.colored-icon {
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+}
+
+.dark-theme .colored-icon {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2)) brightness(1.1);
+}
+
+.icon-text-container {
+    display: flex;
+    align-items: center;
+}
+
 /*------------------------------------*\
-    Demo block
+    Header
 \*------------------------------------*/
 h1 {
-    font-weight:200;
-    text-align:center;
-    font-size:1.4em;
-    line-height:3em;
-    font-family:'Museo Slab','Open Sans',monospace;
+    font-weight: 500;
+    text-align: center;
+    font-size: 1.8rem;
+    padding: 1.5rem 0;
+    color: var(--header-color);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
 }
-a.clear, a.clear:link, a.clear:visited {
-    padding:2px 0 2px 0;
-    font-weight: 400;
-    font-size: 14px;
-    margin:0px 0 0 20px;
-    line-height: 14px;
-    display: inline-block;
-    border-bottom: transparent 1px solid;
-    vertical-align: -10px;
-    -webkit-transition:all 300ms ease-in;
-       -moz-transition:all 300ms ease-in;
-        -ms-transition:all 300ms ease-in;
-         -o-transition:all 300ms ease-in;
-            transition:all 300ms ease-in;
-}
-a.clear:hover {
-    text-decoration: none;
-    cursor: pointer;
-}
+
 /*------------------------------------*\
     Table (directory listing)
 \*------------------------------------*/
 table {
-    border-collapse:collapse;
-    font-size:.875em;
-    max-width:100%;
-    margin:20px auto 0px auto;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    margin: 1rem 0;
+    box-shadow: 0 2px 5px var(--table-shadow);
+    border-radius: 5px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
 }
-tr {
-    outline:0;
-    border:0;
-}
-tr:hover td {
-    background:#f9f9f9;
-}
+
 th {
-    text-align:left;
-    font-size:1em;
-    padding-right:20px;
-    width:85%;
+    text-align: left;
+    padding: 0.75rem;
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
+    font-weight: 500;
 }
-/* 2nd Column: Filename */
-th + th {
-    width:10%;
-    padding-left:0px;
-    padding-right:0px;
-    min-width:100px;
+
+/* 1st Column: Filename */
+th:first-child {
+    width: 60%;
 }
-/* 3rd Column: Last Modified */
-th + th + th {
-    width:20%;
+
+/* 2nd Column: Last Modified */
+th:nth-child(2) {
+    width: 25%;
 }
-/* 4th Column: Size */
-th + th + th + th {
-    width:5%;
+
+/* 3rd Column: Size */
+th:nth-child(3) {
+    width: 15%;
+    text-align: right;
 }
-tr td:first-of-type {
-    #padding-left:10px;
-    padding-right:10px;
+
+tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
 }
-th:first-of-type {
-    padding-left:10px;
+
+tr:hover {
+    background-color: var(--hover-color);
 }
+
+tr:hover .colored-icon {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
 td {
-    padding:3px 0;
-    outline:0;
-    border:0;
-    border-bottom:1px solid #dedede;
-    vertical-align:middle;
-    text-align:left;
-    -webkit-transition:background 300ms ease-in;
-       -moz-transition:background 300ms ease-in;
-        -ms-transition:background 300ms ease-in;
-         -o-transition:background 300ms ease-in;
-            transition:background 300ms ease-in;
+    padding: 0.75rem;
+    vertical-align: middle;
 }
-td:last-child, th:last-child {
-    text-align:right;
-    min-width:150px;
-}
-th:last-child {
-    padding-right:5px;
-}
+
 td:last-child {
-    padding-right:10px;
+    text-align: right;
 }
-td a{
-    display: block;
+
+td a {
+    display: flex;
+    align-items: center;
+    color: var(--text-color);
 }
+
+td a:hover {
+    color: var(--primary-color);
+}
+
 tr.parent a {
-    color:#9099A3;
+    color: var(--secondary-color);
 }
+
 /*------------------------------------*\
     Footer
 \*------------------------------------*/
-
-#footer{
-	margin-top: 20px;
+#footer {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+    border-top: 1px solid var(--border-color);
+    background-color: var(--footer-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.footer {
-    text-align:center;
-    font-size:.75em;
-    margin-top:50px;
+.text-center {
+    text-align: center;
+    margin-bottom: 1rem;
 }
 
-.text-center{
-	margin-bottom: 20px;
+.footer-logo {
+    margin-top: 0.5rem;
+    transition: filter 0.3s ease;
+}
+
+.dark-theme .footer-logo {
+    filter: brightness(1.75);
+}
+
+/*------------------------------------*\
+    Responsive Styles
+\*------------------------------------*/
+/* Mobile View */
+.mobile-view table {
+    display: block;
+    overflow-x: auto;
+}
+
+.mobile-view th:nth-child(2),
+.mobile-view td:nth-child(2) {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    th, td {
+        padding: 0.5rem;
+    }
+    
+    th:nth-child(2),
+    td:nth-child(2) {
+        display: none;
+    }
+    
+    .icon-container svg {
+        --icon-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    html {
+        font-size: 13px;
+    }
+    
+    body {
+        padding: 0 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    .icon-container svg {
+        --icon-size: 18px;
+    }
 }
