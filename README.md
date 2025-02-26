@@ -1,4 +1,6 @@
-# Nginxy - Directory Listing Theme (Modernized Version)
+# <img src="Nginxy-Theme/images/img/logo.svg" width="100" />Nginxy
+
+## Directory Listing Theme (Modernized Version)
 
 ![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/lfelipe1501/Nginxy/issues)
@@ -26,7 +28,7 @@ Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsys
 
 - Move the *Nginxy-Theme/* folder to a directory before the folder that will serve the files and rename it to **.nginxy/** As shown in the following screenshot:
 
-  ![ScreenShot](https://raw.githubusercontent.com/lfelipe1501/lfelipe-projects/master/Nginxy-Theme/Capture.PNG)
+  ![ScreenShot](https://raw.githubusercontent.com/lfelipe1501/lfelipe-projects/master/Nginxy-Theme/install.png)
 
 - Restart/reload nginx.
 
