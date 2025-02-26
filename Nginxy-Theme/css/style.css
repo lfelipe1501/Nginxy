@@ -31,12 +31,12 @@
     :root {
         --primary-color: #6d8eff;
         --secondary-color: #adb5bd;
-        --background-color: #282523;
+        --background-color: #121212;
         --text-color: #e0e0e0;
         --border-color: #2d2d2d;
         --hover-color: #1e1e1e;
         --header-color: #e0e0e0;
-        --footer-color: #4e423b0d;
+        --footer-color: #1a1a1a;
         --table-header-bg: #2d2d2d;
         --table-header-color: #e0e0e0;
         --table-shadow: rgba(0, 0, 0, 0.2);
@@ -44,7 +44,7 @@
     }
 }
 
-/* Mantener las clases para cambio manual de tema */
+/* Keep classes for manual theme change */
 .light-theme {
     --primary-color: #4a6cf7;
     --secondary-color: #6c757d;
@@ -64,12 +64,12 @@
 .dark-theme {
     --primary-color: #6d8eff;
     --secondary-color: #adb5bd;
-    --background-color: #282523;
+    --background-color: #121212;
     --text-color: #e0e0e0;
     --border-color: #2d2d2d;
     --hover-color: #1e1e1e;
     --header-color: #e0e0e0;
-    --footer-color: #4e423b0d;
+    --footer-color: #1a1a1a;
     --table-header-bg: #2d2d2d;
     --table-header-color: #e0e0e0;
     --table-shadow: rgba(0, 0, 0, 0.2);

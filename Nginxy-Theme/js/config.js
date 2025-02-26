@@ -89,17 +89,17 @@ const iconMap = {
 
 // End of normal settings.
 
-// Función para detectar y aplicar el tema según preferencias del sistema
+// Function to detect and apply theme according to system preferences
 function applyThemePreference() {
-    // Verificar si hay una preferencia guardada
+    // Check if there's a saved preference
     const savedTheme = localStorage.getItem('theme');
     
     if (savedTheme) {
-        // Aplicar tema guardado
+        // Apply saved theme
         document.documentElement.classList.remove('light-theme', 'dark-theme');
         document.documentElement.classList.add(savedTheme);
     } else {
-        // Aplicar tema según preferencia del sistema
+        // Apply theme according to system preference
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
         document.documentElement.classList.remove('light-theme', 'dark-theme');
         
@@ -111,7 +111,7 @@ function applyThemePreference() {
     }
 }
 
-// Función para cambiar el tema manualmente
+// Function to manually toggle theme
 function toggleTheme() {
     const isDarkTheme = document.documentElement.classList.contains('dark-theme');
     document.documentElement.classList.remove('light-theme', 'dark-theme');
@@ -125,25 +125,26 @@ function toggleTheme() {
     }
 }
 
-// Escuchar cambios en la preferencia del sistema
+// Listen for changes in system preference
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    // Solo aplicar si no hay una preferencia guardada
+    // Only apply if there's no saved preference
     if (!localStorage.getItem('theme')) {
         document.documentElement.classList.remove('light-theme', 'dark-theme');
         document.documentElement.classList.add(e.matches ? 'dark-theme' : 'light-theme');
     }
 });
 
+// Apply theme when page loads
 document.addEventListener('DOMContentLoaded', function() {
     applyThemePreference();
     
-    // Añadir botón para cambiar tema
+    // Add button to toggle theme
     const footer = document.getElementById('footer');
     if (footer) {
         const themeToggleBtn = document.createElement('button');
         themeToggleBtn.id = 'theme-toggle';
         themeToggleBtn.innerHTML = '🌓';
-        themeToggleBtn.title = 'Cambiar tema';
+        themeToggleBtn.title = 'Toggle Theme';
         themeToggleBtn.onclick = toggleTheme;
         themeToggleBtn.className = 'theme-toggle-btn';
         footer.appendChild(themeToggleBtn);

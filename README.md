@@ -34,6 +34,9 @@ Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsys
 
 - Check that it works and enjoy!
 
+> [!TIP]
+> You can see the [Docker TEST Guide](https://github.com/lfelipe1501/Nginxy/wiki#docker-setup) in the [WIKI](https://github.com/lfelipe1501/Nginxy/wiki) session.
+
 ## Customization
 
 ### Colors and Themes
