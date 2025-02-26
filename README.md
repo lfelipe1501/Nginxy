@@ -125,7 +125,7 @@ You can find more available icons at [Material Design Icons](https://materialdes
 
 ### Developed by
 
-Developer / Author: [Luis Felipe Sánchez](https://github.com/lfelipe1501)
+Developer / Author: [Luis Felipe Sanchez](https://github.com/lfelipe1501)
 Company: [lfsystems](https://www.lfsystems.com.co)
 
 ### Credits
