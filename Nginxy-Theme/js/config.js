@@ -10,6 +10,12 @@
 const websiteName = 'File Server';
 const websiteURL = 'https://www.lfsystems.com.co';
 
+// Configuración de paginación
+const filesPerPage = 10; // Máximo de archivos por página
+let currentPage = 1;
+let currentSortField = 'name'; // Campo de ordenamiento por defecto
+let currentSortOrder = 'asc'; // Orden por defecto
+
 // Material Design Icons CDN
 const iconsCDN = 'https://cdn.jsdelivr.net/npm/@mdi/svg@7.2.96/svg/';
 
@@ -134,6 +140,478 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
     }
 });
 
+// Función para verificar si una fila es un directorio
+function isDirectory(row) {
+    // Verificar si la fila tiene un enlace que termina con '/'
+    const link = row.querySelector('td:first-child a');
+    if (link && link.getAttribute('href')) {
+        return link.getAttribute('href').endsWith('/');
+    }
+    return false;
+}
+
+// Función para convertir tamaños de archivo a bytes para comparación
+function parseFileSize(sizeStr) {
+    if (!sizeStr || sizeStr === '-') return 0;
+    
+    // Eliminar espacios y convertir a minúsculas
+    sizeStr = sizeStr.trim().toLowerCase();
+    
+    // Patrones comunes de tamaño de archivo
+    const units = {
+        'b': 1,
+        'bytes': 1,
+        'k': 1024,
+        'kb': 1024,
+        'kib': 1024,
+        'm': 1024 * 1024,
+        'mb': 1024 * 1024,
+        'mib': 1024 * 1024,
+        'g': 1024 * 1024 * 1024,
+        'gb': 1024 * 1024 * 1024,
+        'gib': 1024 * 1024 * 1024,
+        't': 1024 * 1024 * 1024 * 1024,
+        'tb': 1024 * 1024 * 1024 * 1024,
+        'tib': 1024 * 1024 * 1024 * 1024
+    };
+    
+    // Patrón para formatos como "4.2 KiB"
+    const kiPattern = /^(\d+(?:\.\d+)?)\s*([kmgt]i?b)$/i;
+    const kiMatch = sizeStr.match(kiPattern);
+    
+    if (kiMatch) {
+        const size = parseFloat(kiMatch[1]);
+        const unit = kiMatch[2].toLowerCase();
+        console.log(`Parseando tamaño: ${size} ${unit}`);
+        return size * (units[unit] || 1);
+    }
+    
+    // Patrón para formatos simples como "140 B"
+    const simplePattern = /^(\d+(?:\.\d+)?)\s*([bkmgt])?$/i;
+    const simpleMatch = sizeStr.match(simplePattern);
+    
+    if (simpleMatch) {
+        const size = parseFloat(simpleMatch[1]);
+        const unit = (simpleMatch[2] || 'b').toLowerCase();
+        console.log(`Parseando tamaño simple: ${size} ${unit}`);
+        return size * (units[unit] || 1);
+    }
+    
+    console.log(`No se pudo parsear el tamaño: ${sizeStr}`);
+    return 0;
+}
+
+// Función para convertir fechas de Nginx a timestamps para comparación
+function parseNginxDate(dateStr) {
+    if (!dateStr || dateStr === '-') return 0;
+    
+    // Formato común de fecha en Nginx: "26-Feb-2023 12:34"
+    const months = {
+        'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+        'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
+    };
+    
+    try {
+        // Intentar parsear la fecha
+        const parts = dateStr.split(' ');
+        
+        if (parts.length >= 2) {
+            const dateParts = parts[0].split('-');
+            const timeParts = parts[1].split(':');
+            
+            if (dateParts.length >= 3) {
+                const day = parseInt(dateParts[0], 10);
+                const month = months[dateParts[1].toLowerCase().substring(0, 3)] || 0;
+                const year = parseInt(dateParts[2], 10);
+                
+                let hours = 0, minutes = 0;
+                if (timeParts.length >= 2) {
+                    hours = parseInt(timeParts[0], 10);
+                    minutes = parseInt(timeParts[1], 10);
+                }
+                
+                // Crear objeto Date y devolver timestamp
+                return new Date(year, month, day, hours, minutes, 0, 0).getTime();
+            }
+        }
+    } catch (e) {
+        console.error('Error parsing date:', e);
+    }
+    
+    // Si no se puede parsear, devolver 0
+    return 0;
+}
+
+// Función para inicializar los encabezados de la tabla y agregar eventos de ordenamiento
+function initializeTableHeaders() {
+    // Obtener todos los encabezados de la tabla
+    const headers = document.querySelectorAll('th');
+    
+    // Limpiar cualquier evento o atributo existente
+    headers.forEach(header => {
+        // Eliminar los enlaces existentes y guardar el texto
+        const headerText = header.textContent.trim();
+        
+        // Limpiar el contenido del encabezado
+        header.innerHTML = '';
+        
+        // Crear un nuevo span para el texto
+        const textSpan = document.createElement('span');
+        textSpan.textContent = headerText.replace(/File Name|File Size|Date/i, match => match);
+        header.appendChild(textSpan);
+        
+        // Agregar un espacio después del texto
+        header.appendChild(document.createTextNode(' '));
+        
+        // Crear un span para el icono de ordenamiento
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'sort-icon';
+        iconSpan.innerHTML = '⇕';
+        iconSpan.style.opacity = '0.5';
+        header.appendChild(iconSpan);
+    });
+    
+    // Asignar atributos data-sort y eventos de clic a los encabezados correctos
+    // Nombre de archivo (primera columna)
+    if (headers[0]) {
+        headers[0].setAttribute('data-sort', 'name');
+        headers[0].style.cursor = 'pointer';
+        headers[0].addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            sortTable('name');
+            return false;
+        });
+    }
+    
+    // Tamaño de archivo (segunda columna)
+    if (headers.length > 1 && headers[1]) {
+        headers[1].setAttribute('data-sort', 'size');
+        headers[1].style.cursor = 'pointer';
+        headers[1].addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            sortTable('size');
+            return false;
+        });
+    }
+    
+    // Fecha de modificación (tercera columna)
+    if (headers.length > 2 && headers[2]) {
+        headers[2].setAttribute('data-sort', 'date');
+        headers[2].style.cursor = 'pointer';
+        headers[2].addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            sortTable('date');
+            return false;
+        });
+    }
+    
+    console.log("Encabezados de tabla inicializados correctamente");
+}
+
+// Función para ordenar los elementos de la tabla
+function sortTable(field) {
+    // Prevenir comportamiento predeterminado si se llama desde un evento
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    
+    // Si hacemos clic en el mismo campo, invertimos el orden
+    if (currentSortField === field) {
+        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortField = field;
+        // Por defecto, tamaños ascendentes y fechas descendentes
+        currentSortOrder = field === 'date' ? 'desc' : 'asc';
+    }
+    
+    console.log(`Ordenando por: ${field} en orden: ${currentSortOrder}`);
+    
+    const table = document.querySelector('table');
+    const tbody = table.querySelector('tbody');
+    
+    // Separar filas de directorios y archivos
+    const rows = Array.from(tbody.querySelectorAll('tr:not(.parent)'));
+    
+    // Identificar la fila del directorio padre (Parent directory)
+    const parentRow = rows.find(row => {
+        const link = row.querySelector('td:first-child a');
+        return link && link.textContent.includes('Parent directory');
+    });
+    
+    // Filtrar la fila del directorio padre
+    const rowsWithoutParent = parentRow ? rows.filter(row => row !== parentRow) : rows;
+    
+    // Separar directorios y archivos
+    const dirRows = rowsWithoutParent.filter(row => isDirectory(row));
+    const fileRows = rowsWithoutParent.filter(row => !isDirectory(row));
+    
+    console.log(`Encontrados: ${dirRows.length} directorios y ${fileRows.length} archivos`);
+    
+    // Solo ordenar las filas de archivos
+    fileRows.sort((a, b) => {
+        let aValue, bValue;
+        
+        if (field === 'name') {
+            // Obtener el texto del nombre
+            const aLink = a.querySelector('td:first-child a');
+            const bLink = b.querySelector('td:first-child a');
+            
+            aValue = aLink ? aLink.textContent.trim().toLowerCase() : '';
+            bValue = bLink ? bLink.textContent.trim().toLowerCase() : '';
+            
+            console.log(`Comparando nombres: "${aValue}" vs "${bValue}"`);
+        } else if (field === 'date') {
+            // Obtener el texto de la fecha de la última columna
+            const aDateText = a.querySelector('td:last-child').textContent.trim();
+            const bDateText = b.querySelector('td:last-child').textContent.trim();
+            
+            // Convertir las fechas a timestamps para comparación
+            aValue = parseNginxDate(aDateText);
+            bValue = parseNginxDate(bDateText);
+            
+            console.log(`Comparando fechas: "${aDateText}" (${aValue}) vs "${bDateText}" (${bValue})`);
+        } else if (field === 'size') {
+            // Obtener el texto del tamaño de la columna de tamaño (segunda columna)
+            const aSizeText = a.querySelector('td:nth-child(2)').textContent.trim();
+            const bSizeText = b.querySelector('td:nth-child(2)').textContent.trim();
+            
+            // Convertir tamaño a bytes para comparación
+            aValue = parseFileSize(aSizeText);
+            bValue = parseFileSize(bSizeText);
+            
+            console.log(`Comparando tamaños: "${aSizeText}" (${aValue}) vs "${bSizeText}" (${bValue})`);
+        }
+        
+        // Aplicar dirección de ordenamiento
+        const direction = currentSortOrder === 'asc' ? 1 : -1;
+        
+        // Comparación especial para manejar valores undefined o null
+        if (aValue === undefined || aValue === null) return 1 * direction;
+        if (bValue === undefined || bValue === null) return -1 * direction;
+        
+        // Comparación normal
+        if (aValue < bValue) return -1 * direction;
+        if (aValue > bValue) return 1 * direction;
+        return 0;
+    });
+    
+    // También ordenar los directorios por nombre
+    if (field === 'name') {
+        dirRows.sort((a, b) => {
+            const aLink = a.querySelector('td:first-child a');
+            const bLink = b.querySelector('td:first-child a');
+            
+            const aValue = aLink ? aLink.textContent.trim().toLowerCase() : '';
+            const bValue = bLink ? bLink.textContent.trim().toLowerCase() : '';
+            
+            // Aplicar dirección de ordenamiento
+            const direction = currentSortOrder === 'asc' ? 1 : -1;
+            
+            if (aValue < bValue) return -1 * direction;
+            if (aValue > bValue) return 1 * direction;
+            return 0;
+        });
+    }
+    
+    // Actualizar iconos de ordenamiento
+    updateSortIcons();
+    
+    // Limpiar tabla
+    while (tbody.firstChild) {
+        tbody.removeChild(tbody.firstChild);
+    }
+    
+    // Agregar fila de directorio padre primero si existe
+    if (parentRow) {
+        tbody.appendChild(parentRow);
+    }
+    
+    // Agregar filas de directorios primero
+    dirRows.forEach(row => tbody.appendChild(row));
+    
+    // Luego agregar filas de archivos ordenadas
+    fileRows.forEach(row => tbody.appendChild(row));
+    
+    // Actualizar paginación
+    updatePagination();
+    
+    // Limpiar parámetros de URL que puedan haber sido agregados por Nginx
+    cleanupUrl();
+}
+
+// Función para limpiar los parámetros de URL agregados por Nginx
+function cleanupUrl() {
+    // Verificar si la URL tiene parámetros de ordenamiento de Nginx
+    if (window.location.href.includes('?C=') || window.location.href.includes('&O=')) {
+        // Obtener la URL base sin parámetros
+        const baseUrl = window.location.href.split('?')[0];
+        
+        // Actualizar la URL sin recargar la página
+        window.history.replaceState({}, document.title, baseUrl);
+        
+        console.log("URL limpiada de parámetros de ordenamiento");
+    }
+}
+
+// Función para actualizar los iconos de ordenamiento
+function updateSortIcons() {
+    const headers = document.querySelectorAll('th');
+    
+    headers.forEach(header => {
+        // Obtener el icono existente
+        const existingIcon = header.querySelector('.sort-icon');
+        if (existingIcon) {
+            const field = header.getAttribute('data-sort');
+            if (field && field === currentSortField) {
+                existingIcon.innerHTML = currentSortOrder === 'asc' ? '&uarr;' : '&darr;';
+                existingIcon.style.opacity = '1';
+            } else {
+                existingIcon.innerHTML = '⇕';
+                existingIcon.style.opacity = '0.5';
+            }
+        }
+    });
+}
+
+// Función para actualizar la paginación
+function updatePagination() {
+    const table = document.querySelector('table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr:not(.parent)'));
+    const totalPages = Math.ceil(rows.length / filesPerPage);
+    
+    // Asegurarse de que la página actual es válida
+    if (currentPage > totalPages) {
+        currentPage = totalPages || 1;
+    }
+    
+    // Mostrar/ocultar filas según la página actual
+    rows.forEach((row, index) => {
+        const startIndex = (currentPage - 1) * filesPerPage;
+        const endIndex = startIndex + filesPerPage - 1;
+        
+        if (index >= startIndex && index <= endIndex) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Actualizar o crear controles de paginación
+    updatePaginationControls(totalPages);
+}
+
+// Función para actualizar los controles de paginación
+function updatePaginationControls(totalPages) {
+    // Eliminar controles existentes
+    let paginationContainer = document.getElementById('pagination-container');
+    if (paginationContainer) {
+        paginationContainer.remove();
+    }
+    
+    // Si solo hay una página, no mostrar controles
+    if (totalPages <= 1) {
+        return;
+    }
+    
+    // Crear nuevo contenedor de paginación
+    paginationContainer = document.createElement('div');
+    paginationContainer.id = 'pagination-container';
+    
+    // Botón para ir a la primera página
+    const firstPageButton = document.createElement('button');
+    firstPageButton.textContent = '«';
+    firstPageButton.title = 'Primera página';
+    firstPageButton.className = 'pagination-btn';
+    firstPageButton.disabled = currentPage === 1;
+    firstPageButton.addEventListener('click', () => {
+        if (currentPage !== 1) {
+            currentPage = 1;
+            updatePagination();
+        }
+    });
+    paginationContainer.appendChild(firstPageButton);
+    
+    // Botón anterior
+    const prevButton = document.createElement('button');
+    prevButton.textContent = '‹';
+    prevButton.title = 'Página anterior';
+    prevButton.className = 'pagination-btn';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePagination();
+        }
+    });
+    paginationContainer.appendChild(prevButton);
+    
+    // Botones numéricos de página
+    // Mostrar máximo 3 botones de página alrededor de la página actual
+    const maxPageButtons = 3;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+    
+    // Ajustar el rango si estamos cerca del final
+    if (endPage - startPage + 1 < maxPageButtons && startPage > 1) {
+        startPage = Math.max(1, endPage - maxPageButtons + 1);
+    }
+    
+    // Mostrar botones de página
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.textContent = i.toString();
+        pageButton.className = i === currentPage ? 'pagination-btn pagination-btn-active' : 'pagination-btn pagination-btn-number';
+        pageButton.disabled = i === currentPage;
+        pageButton.addEventListener('click', () => {
+            currentPage = i;
+            updatePagination();
+        });
+        paginationContainer.appendChild(pageButton);
+    }
+    
+    // Botón siguiente
+    const nextButton = document.createElement('button');
+    nextButton.textContent = '›';
+    nextButton.title = 'Página siguiente';
+    nextButton.className = 'pagination-btn';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePagination();
+        }
+    });
+    paginationContainer.appendChild(nextButton);
+    
+    // Botón para ir a la última página
+    const lastPageButton = document.createElement('button');
+    lastPageButton.textContent = '»';
+    lastPageButton.title = 'Última página';
+    lastPageButton.className = 'pagination-btn';
+    lastPageButton.disabled = currentPage === totalPages;
+    lastPageButton.addEventListener('click', () => {
+        if (currentPage !== totalPages) {
+            currentPage = totalPages;
+            updatePagination();
+        }
+    });
+    paginationContainer.appendChild(lastPageButton);
+    
+    // Información de página (opcional, puedes quitar esto si prefieres solo los botones)
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `${currentPage} de ${totalPages}`;
+    pageInfo.className = 'pagination-info';
+    paginationContainer.appendChild(pageInfo);
+    
+    // Agregar controles después de la tabla
+    const table = document.querySelector('table');
+    table.parentNode.insertBefore(paginationContainer, table.nextSibling);
+}
 // Apply theme when page loads
 document.addEventListener('DOMContentLoaded', function() {
     applyThemePreference();
@@ -195,6 +673,12 @@ document.addEventListener('DOMContentLoaded', function() {
             found = 1;
             const oldText = link.textContent;
             insertSvgIcon(link, 'home', oldText);
+            
+            // Marcar la fila como parent para excluirla del ordenamiento
+            const row = link.closest('tr');
+            if (row) {
+                row.classList.add('parent');
+            }
             return;
         }
         
@@ -225,6 +709,15 @@ document.addEventListener('DOMContentLoaded', function() {
             insertSvgIcon(link, 'error', oldText);
         }
     });
+    
+    // Inicializar encabezados de tabla
+    initializeTableHeaders();
+    
+    // Inicializar paginación
+    updatePagination();
+    
+    // Limpiar parámetros de URL al cargar la página
+    cleanupUrl();
     
     // Add responsive behavior for mobile
     addResponsiveFeatures();

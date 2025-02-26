@@ -13,15 +13,8 @@ RUN apk update && apk add --no-cache \
 ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Create necessary directories
-RUN mkdir -p /var/www/html
-
-# Download the official release of the Nginxy project
-RUN wget -q https://github.com/lfelipe1501/Nginxy/releases/download/v2/nginxy.zip -O /tmp/nginxy.zip \
-    && unzip -q /tmp/nginxy.zip -d /tmp \
-    && mkdir -p /var/www/html/.nginxy \
-    && cp -r /tmp/.nginxy/* /var/www/html/.nginxy/ \
-    && rm -rf /tmp/nginxy.zip /tmp/.nginxy
+# Copy local Nginxy theme files instead of downloading
+COPY Nginxy-Theme /var/www/html/.nginxy
 
 # Copy Nginx configuration
 COPY test/ngx-template.conf /etc/nginx/http.d/default.conf
