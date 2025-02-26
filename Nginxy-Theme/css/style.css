@@ -13,10 +13,10 @@
     color-scheme: light dark;
     --primary-color: #4a6cf7;
     --secondary-color: #6c757d;
+    --hover-color: #dc8867;
     --background-color: #ffffff;
     --text-color: #333333;
     --border-color: #e9ecef;
-    --hover-color: #f8f9fa;
     --header-color: #343a40;
     --footer-color: #f8f9fa;
     --icon-size: 24px;
@@ -31,12 +31,12 @@
     :root {
         --primary-color: #6d8eff;
         --secondary-color: #adb5bd;
+        --hover-color: #dc8867;
         --background-color: #282523;
         --text-color: #e0e0e0;
         --border-color: #2d2d2d;
-        --hover-color: #1e1e1e;
         --header-color: #e0e0e0;
-        --footer-color: #1a1a1a;
+        --footer-color: #4e423b12;
         --table-header-bg: #2d2d2d;
         --table-header-color: #e0e0e0;
         --table-shadow: rgba(0, 0, 0, 0.2);
@@ -48,10 +48,10 @@
 .light-theme {
     --primary-color: #4a6cf7;
     --secondary-color: #6c757d;
+    --hover-color: #dc8867;
     --background-color: #ffffff;
     --text-color: #333333;
     --border-color: #e9ecef;
-    --hover-color: #f8f9fa;
     --header-color: #343a40;
     --footer-color: #f8f9fa;
     --icon-size: 24px;
@@ -64,12 +64,12 @@
 .dark-theme {
     --primary-color: #6d8eff;
     --secondary-color: #adb5bd;
+    --hover-color: #dc8867;
     --background-color: #282523;
     --text-color: #e0e0e0;
     --border-color: #2d2d2d;
-    --hover-color: #1e1e1e;
     --header-color: #e0e0e0;
-    --footer-color: #1a1a1a;
+    --footer-color: #4e423b12;
     --table-header-bg: #2d2d2d;
     --table-header-color: #e0e0e0;
     --table-shadow: rgba(0, 0, 0, 0.2);
@@ -188,6 +188,11 @@ th {
 
 th a {
     color: var(--table-header-color);
+}
+
+th a:hover {
+    color: var(--hover-color);
+    opacity: 0.8;
 }
 
 /* 1st Column: Filename */
