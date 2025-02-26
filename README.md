@@ -1,4 +1,4 @@
-# <img src="Nginxy-Theme/images/img/logo.svg" width="100" />Nginxy
+# ![Nginxy Logo](https://raw.githubusercontent.com/lfelipe1501/Nginxy-Theme/main/images/img/logo.svg?width=100) Nginxy
 
 ## Directory Listing Theme (Modernized Version)
 
