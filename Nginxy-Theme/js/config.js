@@ -89,9 +89,65 @@ const iconMap = {
 
 // End of normal settings.
 
+// Función para detectar y aplicar el tema según preferencias del sistema
+function applyThemePreference() {
+    // Verificar si hay una preferencia guardada
+    const savedTheme = localStorage.getItem('theme');
+    
+    if (savedTheme) {
+        // Aplicar tema guardado
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        document.documentElement.classList.add(savedTheme);
+    } else {
+        // Aplicar tema según preferencia del sistema
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        
+        if (prefersDarkScheme) {
+            document.documentElement.classList.add('dark-theme');
+        } else {
+            document.documentElement.classList.add('light-theme');
+        }
+    }
+}
+
+// Función para cambiar el tema manualmente
+function toggleTheme() {
+    const isDarkTheme = document.documentElement.classList.contains('dark-theme');
+    document.documentElement.classList.remove('light-theme', 'dark-theme');
+    
+    if (isDarkTheme) {
+        document.documentElement.classList.add('light-theme');
+        localStorage.setItem('theme', 'light-theme');
+    } else {
+        document.documentElement.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark-theme');
+    }
+}
+
+// Escuchar cambios en la preferencia del sistema
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    // Solo aplicar si no hay una preferencia guardada
+    if (!localStorage.getItem('theme')) {
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        document.documentElement.classList.add(e.matches ? 'dark-theme' : 'light-theme');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Check for dark mode preference
-    setupThemeDetection();
+    applyThemePreference();
+    
+    // Añadir botón para cambiar tema
+    const footer = document.getElementById('footer');
+    if (footer) {
+        const themeToggleBtn = document.createElement('button');
+        themeToggleBtn.id = 'theme-toggle';
+        themeToggleBtn.innerHTML = '🌓';
+        themeToggleBtn.title = 'Cambiar tema';
+        themeToggleBtn.onclick = toggleTheme;
+        themeToggleBtn.className = 'theme-toggle-btn';
+        footer.appendChild(themeToggleBtn);
+    }
     
     // Working on nginx HTML and applying settings.
     const h1Element = document.querySelector("h1");
@@ -233,33 +289,4 @@ function addResponsiveFeatures() {
     
     // Update on resize
     window.addEventListener('resize', updateBodyClass);
-}
-
-// Function to detect and apply theme based on user preference
-function setupThemeDetection() {
-    // Check if the browser supports dark mode detection
-    if (window.matchMedia) {
-        const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        
-        // Apply theme based on current preference
-        applyTheme(darkModeMediaQuery.matches);
-        
-        // Listen for changes in the color scheme
-        darkModeMediaQuery.addEventListener('change', (e) => {
-            applyTheme(e.matches);
-        });
-    }
-}
-
-// Function to apply dark or light theme
-function applyTheme(isDarkMode) {
-    const root = document.documentElement;
-    
-    if (isDarkMode) {
-        root.classList.add('dark-theme');
-        root.classList.remove('light-theme');
-    } else {
-        root.classList.add('light-theme');
-        root.classList.remove('dark-theme');
-    }
 }

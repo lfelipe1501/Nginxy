@@ -5,10 +5,12 @@
     Theme name: Nginxy
     Theme author: @lfelipe1501
 \*------------------------------------*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap');
 
 /* Light Theme Variables (default) */
-:root, .light-theme {
+:root {
+    color-scheme: light dark;
     --primary-color: #4a6cf7;
     --secondary-color: #6c757d;
     --background-color: #ffffff;
@@ -25,15 +27,49 @@
 }
 
 /* Dark Theme Variables */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #6d8eff;
+        --secondary-color: #adb5bd;
+        --background-color: #282523;
+        --text-color: #e0e0e0;
+        --border-color: #2d2d2d;
+        --hover-color: #1e1e1e;
+        --header-color: #e0e0e0;
+        --footer-color: #4e423b0d;
+        --table-header-bg: #2d2d2d;
+        --table-header-color: #e0e0e0;
+        --table-shadow: rgba(0, 0, 0, 0.2);
+        --icon-opacity: 0.9;
+    }
+}
+
+/* Mantener las clases para cambio manual de tema */
+.light-theme {
+    --primary-color: #4a6cf7;
+    --secondary-color: #6c757d;
+    --background-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #e9ecef;
+    --hover-color: #f8f9fa;
+    --header-color: #343a40;
+    --footer-color: #f8f9fa;
+    --icon-size: 24px;
+    --table-header-bg: #4a6cf7;
+    --table-header-color: #ffffff;
+    --table-shadow: rgba(0, 0, 0, 0.05);
+    --icon-opacity: 1;
+}
+
 .dark-theme {
     --primary-color: #6d8eff;
     --secondary-color: #adb5bd;
-    --background-color: #202020;
+    --background-color: #282523;
     --text-color: #e0e0e0;
     --border-color: #2d2d2d;
     --hover-color: #1e1e1e;
     --header-color: #e0e0e0;
-    --footer-color: #202020;
+    --footer-color: #4e423b0d;
     --table-header-bg: #2d2d2d;
     --table-header-color: #e0e0e0;
     --table-shadow: rgba(0, 0, 0, 0.2);
@@ -48,12 +84,12 @@
 
 html {
     font-size: 16px;
-    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+    font-family: "Poppins", 'Andada Pro', 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.5;
 }
 
 body {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 0 1rem;
     background: var(--background-color);
@@ -136,20 +172,22 @@ h1::before {
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
     box-shadow: 0 2px 5px var(--table-shadow);
     border-radius: 5px;
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
 }
 
 th {
-    text-align: left;
-    padding: 0.75rem;
     background-color: var(--table-header-bg);
     color: var(--table-header-color);
+    padding: 0.75rem;
+    text-align: left;
     font-weight: 500;
+}
+
+th a {
+    color: var(--table-header-color);
 }
 
 /* 1st Column: Filename */
@@ -211,7 +249,6 @@ tr.parent a {
 #footer {
     padding: 1rem 0;
     text-align: center;
-    font-size: 0.9rem;
     color: var(--secondary-color);
     border-top: 1px solid var(--border-color);
     background-color: var(--footer-color);
@@ -237,7 +274,6 @@ tr.parent a {
 \*------------------------------------*/
 /* Mobile View */
 .mobile-view table {
-    display: block;
     overflow-x: auto;
 }
 
@@ -289,5 +325,41 @@ tr.parent a {
     
     .icon-container svg {
         --icon-size: 18px;
+    }
+}
+
+/* Botón para cambiar tema */
+.theme-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Ajustar para pantallas pequeñas */
+@media (max-width: 768px) {
+    .theme-toggle-btn {
+        bottom: 10px;
+        right: 10px;
+        width: 35px;
+        height: 35px;
+        font-size: 18px;
     }
 }
