@@ -7,7 +7,7 @@ A modernized responsive theme for the [Nginx Fancyindex module](https://github.c
 
 Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsystems.com.co/fileserver/).
 
-![Nginxy-Demo](https://raw.githubusercontent.com/lfelipe1501/lfelipe-projects/master/Nginxy-Theme/nginxy.png)
+![Nginxy-Demo](https://raw.githubusercontent.com/lfelipe1501/lfelipe-projects/master/Nginxy-Theme/nginxyNV.png)
 
 ## Features of the Modernized Version
 
