@@ -34,14 +34,14 @@ const iconMap = {
     'json': { icon: 'code-json', color: '#ffc107' },
     
     // Images
-    'jpg': { icon: 'file-image', color: '#9c27b0' },
-    'jpeg': { icon: 'file-image', color: '#9c27b0' },
-    'png': { icon: 'file-image', color: '#9c27b0' },
-    'gif': { icon: 'file-image', color: '#9c27b0' },
+    'jpg': { icon: 'file-jpg-box', color: '#9c27b0' },
+    'jpeg': { icon: 'file-jpg-box', color: '#9c27b0' },
+    'png': { icon: 'file-png-box', color: '#9c27b0' },
+    'gif': { icon: 'file-gif-box', color: '#9c27b0' },
     'bmp': { icon: 'file-image', color: '#9c27b0' },
     'tiff': { icon: 'file-image', color: '#9c27b0' },
     'ico': { icon: 'file-image', color: '#9c27b0' },
-    'svg': { icon: 'file-image', color: '#9c27b0' },
+    'svg': { icon: 'svg', color: '#9c27b0' },
     'psd': { icon: 'file-image', color: '#673ab7' },
     'raw': { icon: 'file-image', color: '#673ab7' },
     
@@ -55,7 +55,7 @@ const iconMap = {
     'wmv': { icon: 'file-video', color: '#ff9800' },
     
     // Archives
-    'zip': { icon: 'folder-zip', color: '#795548' },
+    'zip': { icon: 'zip-box-outline', color: '#795548' },
     'rar': { icon: 'folder-zip', color: '#795548' },
     '7z': { icon: 'folder-zip', color: '#795548' },
     'tar': { icon: 'folder-zip', color: '#795548' },
