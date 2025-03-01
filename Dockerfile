@@ -1,11 +1,10 @@
 FROM alpine:latest
 
+LABEL maintainer="Luis Felipe Sanchez <lfelipe1501@gmail.com>"
+
 # Install necessary dependencies
 RUN apk update && apk add --no-cache \
-    nginx \
-    nginx-mod-http-fancyindex \
-    wget \
-    unzip \
+    nginx nginx-mod-http-fancyindex \
     tzdata \
     && rm -rf /var/cache/apk/*
 
@@ -13,7 +12,7 @@ RUN apk update && apk add --no-cache \
 ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Copy local Nginxy theme files instead of downloading
+# Copy local Nginxy theme files
 COPY Nginxy-Theme /var/www/html/.nginxy
 
 # Copy Nginx configuration
