@@ -7,7 +7,7 @@
 
 A modernized responsive theme for the [Nginx Fancyindex module](https://github.com/aperezdc/ngx-fancyindex). A minimalist, modern, and simple directory listing theme for **nginx** with an appearance similar to Apaxy for Apache.
 
-Here is a demo of what the result looks like: [lfsystems DEMO](https://www.lfsystems.com.co/fileserver/).
+Here is a demo of what the result looks like: [NGINXY DEMO](https://demo.nginxy.com).
 
 ![Nginxy-Demo](https://raw.githubusercontent.com/lfelipe1501/lfelipe-projects/master/Nginxy-Theme/nginxyNV.png)
 
