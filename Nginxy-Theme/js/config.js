@@ -334,7 +334,7 @@ function sortTable(field) {
     const tbody = table.querySelector('tbody');
     
     // Separate directory and file rows
-    const rows = Array.from(tbody.querySelectorAll('tr:not(.parent)'));
+    const rows = Array.from(tbody.querySelectorAll('tr'));
     
     // Identify the parent directory row (Parent directory)
     const parentRow = rows.find(row => {
